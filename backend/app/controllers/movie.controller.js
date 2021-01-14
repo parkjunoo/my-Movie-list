@@ -1,15 +1,13 @@
 const Movie = require("../models/movie.model.js");
 
-// Create and Save a new Customer
+// movie 객체 생성
 exports.create = (req, res) => {
-  // Validate request
   if (!req.body) {
     res.status(400).send({
       message: "Content can not be empty!"
     });
   }
 
-  // Create a Customer
   const movie = new Movie({
     movie_title: req.body.movie_title,
     movie_published: req.body.movie_published,
@@ -18,40 +16,39 @@ exports.create = (req, res) => {
     movie_description: req.body.movie_description,
   });
 
-  // Save Customer in the database
   Movie.create(movie, (err, data) => {
     if (err)
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating the Customer."
+          err.message || "controller : create 생성되지 못했습니다."
       });
     else res.send(data);
   });
 };
 
-// Retrieve all Customers from the database.
+// 영화 전체 찾기 
 exports.findAll = (req, res) => {
   Movie.getAll((err, data) => {
     if (err)
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving customers."
+          err.message || "controller: findall : error"
       });
     else res.send(data);
   });
 };
 
-// Find a single Customer with a customerId
+// 영화 id로 검색
 exports.findOne = (req, res) => {
   Movie.findById(req.params.movieId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found Customer with id ${req.params.movieId}.`
+          message: `controller: findOne: id없음 ${req.params.movieId}.`
         });
       } else {
         res.status(500).send({
-          message: "Error retrieving Customer with id " + req.params.movieId
+          message: "controller: findOne: server " + req.params.movieId
         });
       }
     } else res.send(data);
@@ -64,7 +61,7 @@ exports.update = (req, res) => {
   // Validate Request
   if (!req.body) {
     res.status(400).send({
-      message: "Content can not be empty!"
+      message: "controller: update : 다채워야한다."
     });
   }
 
@@ -75,11 +72,11 @@ exports.update = (req, res) => {
       if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
-            message: `Not found movie with id ${req.params.movieId}.`
+            message: `controller: updateByid Not found movie with id ${req.params.movieId}.`
           });
         } else {
           res.status(500).send({
-            message: "Error updating mvoie with id " + req.params.movieId
+            message: "controller: updateByid Error updating mvoie with id " + req.params.movieId
           });
         }
       } else res.send(data);
@@ -93,13 +90,13 @@ exports.delete = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found movie with id ${req.params.movieId}.`
+          message: `controller : delete : Not found movie with id ${req.params.movieId}.`
         });
       } else {
         res.status(500).send({
-          message: "Could not delete movie with id " + req.params.movieId
+          message: "controller : delete : Could not delete movie with id " + req.params.movieId
         });
       }
-    } else res.send({ message: `movie was deleted successfully!` });
+    } else res.send({ message: `${req.params.movieId} deleted successfully!` });
   });
 };
