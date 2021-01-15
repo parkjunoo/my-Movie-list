@@ -80,7 +80,7 @@ Movie.updateById = (id, movie, result) => {
 };
 
 Movie.remove = (id, result) => {
-  sql.query("DELETE FROM movie WHERE id = ?", id, (err, res) => {
+  sql.query("DELETE FROM movie WHERE _id = ?", id, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);

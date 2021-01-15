@@ -5,9 +5,9 @@
     </div>
     <p></p>
     <button v-on:click="openNew">추가</button>
-    <br>
+    <p></p>
     <li v-for = "item in movieList" v-bind:key = "item._id">
-      <MovieCard :movie="item"></MovieCard>
+      <MovieCard :movie="item" @updateList="listUpdate" ></MovieCard>
     </li>
   </div>
 </template>
@@ -27,10 +27,7 @@ export default {
     }
   },
   mounted() {
-    axios.get('/movies').then(res =>{
-      this.movieList = res.data;
-      console.log(this.movieList); 
-    })
+    listUpdate();
   },
   methods: {
     typing(e) {
@@ -48,6 +45,11 @@ export default {
           console.log(res.data);
       })
     },
+    listUpdate(){
+      axios.get('/movies').then(res =>{
+      this.movieList = res.data; 
+      })
+    }
   },
 }
 </script>
