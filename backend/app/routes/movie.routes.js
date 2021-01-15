@@ -8,7 +8,7 @@ module.exports = app => {
   app.get("/movies", movie.findAll);
 
   // Retrieve a single Customer with customerId
-  app.get("/movies/:customerId", movie.findOne);
+  app.get("/movies/:movieKeyword", movie.findOne);
 
   // Update a Customer with customerId
   app.put("/movies/:customerId", movie.update);

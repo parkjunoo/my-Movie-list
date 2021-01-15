@@ -14,6 +14,7 @@ exports.create = (req, res) => {
     movie_score: req.body.movie_score,
     movie_stillshot: req.body.movie_stillshot,
     movie_description: req.body.movie_description,
+    movie_age: req.body.movie_age
   });
 
   Movie.create(movie, (err, data) => {
@@ -38,9 +39,9 @@ exports.findAll = (req, res) => {
   });
 };
 
-// 영화 id로 검색
+// 내용이 포함된 모든 영화 검색
 exports.findOne = (req, res) => {
-  Movie.findById(req.params.movieId, (err, data) => {
+  Movie.findById(req.params.movieKeyword, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
@@ -84,7 +85,6 @@ exports.update = (req, res) => {
   );
 };
 
-// Delete a Customer with the specified customerId in the request
 exports.delete = (req, res) => {
   Movie.remove(req.params.movieId, (err, data) => {
     if (err) {
