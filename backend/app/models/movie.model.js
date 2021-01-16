@@ -7,6 +7,7 @@ const Movie = function(movies) {
   this.movie_score = movies.movie_score;
   this.movie_stillshot = movies.movie_stillshot;
   this.movie_description = movies.movie_description;
+  this.movie_age = movies.movie_age;
 };
 
 Movie.create = (newMovie, result) => {
@@ -22,8 +23,9 @@ Movie.create = (newMovie, result) => {
   });
 };
 
-Movie.findById = (movieId, result) => {
-  sql.query(`SELECT * FROM movie WHERE id = ${movieId}`, (err, res) => {
+Movie.findById = (movieName, result) => {
+
+  sql.query(`SELECT * FROM movie WHERE movie_title like \"%${movieName}%\"`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -31,8 +33,8 @@ Movie.findById = (movieId, result) => {
     }
 
     if (res.length) {
-      console.log("found movie: ", res[0]);
-      result(null, res[0]);
+      console.log("found movie: ", res);
+      result(null, res);
       return;
     }
 
@@ -57,7 +59,7 @@ Movie.getAll = result => {
 Movie.updateById = (id, movie, result) => {
   sql.query(
     "UPDATE movie SET movie_title = ?, movie_published = ?, movie_score = ?, movie_stillshot = ?, movie_description =? WHERE id = ?",
-    [movie.movie_title, movie.movie_published, movie.movie_score, movie.movie_stillshot, movie.movie_description],
+    [movie.movie_title, movie.movie_published, movie.movie_score, movie.movie_stillshot, movie.movie_description, movie_age],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -78,7 +80,7 @@ Movie.updateById = (id, movie, result) => {
 };
 
 Movie.remove = (id, result) => {
-  sql.query("DELETE FROM movie WHERE id = ?", id, (err, res) => {
+  sql.query("DELETE FROM movie WHERE _id = ?", id, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);

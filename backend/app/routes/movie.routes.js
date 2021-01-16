@@ -8,12 +8,12 @@ module.exports = app => {
   app.get("/movies", movie.findAll);
 
   // Retrieve a single Customer with customerId
-  app.get("/movies/:customerId", movie.findOne);
+  app.get("/movies/:movieKeyword", movie.findOne);
 
   // Update a Customer with customerId
-  app.put("/movies/:customerId", movie.update);
+  app.put("/movies/:movieId", movie.update);
 
   // Delete a Customer with customerId
-  app.delete("/movies/:customerId", movie.delete);
+  app.delete("/movies/:movieId", movie.delete);
 
 };
