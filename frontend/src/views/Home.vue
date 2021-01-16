@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <h1>Movie List</h1>
     <HelloWorld></HelloWorld>
   </div>
 </template>
@@ -15,6 +16,3 @@ export default {
   }
 }
 </script>
-
-<style>
-</style>

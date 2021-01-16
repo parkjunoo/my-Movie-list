@@ -1,33 +1,38 @@
 <template>
   <div class="movieList">
-    <div class="searchbar"  @keyup="event">
-      <input v-on:input="typing" v-bind:value="keyword" placeholder="검색어를 입력하세요" autofocus/>
+    <div class="searchbar" @keyup="event">
+      <input v-on:input="typing" v-bind:value="keyword" placeholder="제목을 입력하세요" autofocus/>
     </div>
     <p></p>
-    <button v-on:click="openNew">추가</button>
+    <button @click="handleClickButton">추가</button>
     <p></p>
     <li v-for = "item in movieList" v-bind:key = "item._id">
       <MovieCard :movie="item" @updateList="listUpdate" ></MovieCard>
     </li>
+     <RegisterMovie title="영화 등록하기" :visible.sync="visible" @update:visible="handleClickButton">
+    </RegisterMovie>
   </div>
 </template>
 
 <script>
 import MovieCard from './MovieCard'
+import RegisterMovie from './RegisterMovie'
 import axios from 'axios';
 export default {
   components:{
-    MovieCard
+    MovieCard,
+    RegisterMovie
   },
   name: 'HelloWorld',
   data(){
     return{
       movieList: [],
-      keyword: ""
+      keyword: "",
+      visible: false
     }
   },
   mounted() {
-    listUpdate();
+    this.listUpdate();
   },
   methods: {
     typing(e) {
@@ -49,6 +54,9 @@ export default {
       axios.get('/movies').then(res =>{
       this.movieList = res.data; 
       })
+    },
+    handleClickButton(){
+      this.visible = !this.visible
     }
   },
 }
