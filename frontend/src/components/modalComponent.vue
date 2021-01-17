@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import RegisterMovie from './RegisterMovie'
 export default {
   name: 'my-modal',
   props: {

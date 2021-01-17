@@ -1,19 +1,20 @@
+
 module.exports = app => {
   const movie = require("../controllers/movie.controller.js");
-
-  // Create a new Customer
+  
   app.post("/movies", movie.create);
 
-  // Retrieve all Customers
-  app.get("/movies", movie.findAll);
+  app.get("/movies/", movie.findAll);
 
-  // Retrieve a single Customer with customerId
-  app.get("/movies/:movieKeyword", movie.findOne);
+  app.get("/movies/:movieKeyword", movie.findKeywordAll);
 
-  // Update a Customer with customerId
   app.put("/movies/:movieId", movie.update);
 
-  // Delete a Customer with customerId
   app.delete("/movies/:movieId", movie.delete);
 
+  //StillShot
+  //stillshot 등록
+  app.post("/stillshot",movie.createStillShot);
+  //stillshot 영화 아이디로 찾기
+  app.get("/stillshot/:movieId", movie.findIdStillshot);
 };

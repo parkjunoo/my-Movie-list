@@ -1,7 +1,10 @@
 const Movie = require("../models/movie.model.js");
+const StillShot = require("../models/stillshot.model.js");
+
 
 // movie 객체 생성
 exports.create = (req, res) => {
+
   if (!req.body) {
     res.status(400).send({
       message: "Content can not be empty!"
@@ -12,7 +15,6 @@ exports.create = (req, res) => {
     movie_title: req.body.movie_title,
     movie_published: req.body.movie_published,
     movie_score: req.body.movie_score,
-    movie_stillshot: req.body.movie_stillshot,
     movie_description: req.body.movie_description,
     movie_age: req.body.movie_age
   });
@@ -23,7 +25,9 @@ exports.create = (req, res) => {
         message:
           err.message || "controller : create 생성되지 못했습니다."
       });
-    else res.send(data);
+    else{  
+      res.send(data.id.toString());
+    }
   });
 };
 
@@ -37,10 +41,12 @@ exports.findAll = (req, res) => {
       });
     else res.send(data);
   });
+
+
 };
 
 // 내용이 포함된 모든 영화 검색
-exports.findOne = (req, res) => {
+exports.findKeywordAll = (req, res) => {
   Movie.findById(req.params.movieKeyword, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
@@ -98,5 +104,67 @@ exports.delete = (req, res) => {
         });
       }
     } else res.send({ message: `${req.params.movieId} deleted successfully!` });
+  });
+};
+
+exports.createStillShot = (req, res) =>{
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  const stilllshot = new StillShot({
+    movie_no : req.body.movieNo,
+    movie_stillshot : req.body.moviePath
+  });
+
+  StillShot.create(stilllshot, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "controller : create 생성되지 못했습니다."
+      });
+    else{  
+      res.send(data);
+    }
+  });
+}
+
+exports.findIdStillshot = (req, res) => {
+  StillShot.findById(req.params.movieId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `controller: findOne: id없음 ${req.params.movieId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "controller: findOne: server " + req.params.movieId
+        });
+      }
+    } else{
+      res.send(data);
+    }
+  });
+};
+
+
+exports.authorize = (req, res) => {
+  Admin.findById(req.params.password, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `controller: findOne: id없음 ${req.params.movieId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "controller: findOne: server " + req.params.movieId
+        });
+      }
+    } else{
+     console.log(req.session)
+      
+    }
   });
 };
