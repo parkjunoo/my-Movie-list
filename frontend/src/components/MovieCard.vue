@@ -1,9 +1,12 @@
 <template>
   <table border="1">
   <tr>
-    <td rowspan="5"><img class="stillshot" :src="$props.movie.movie_stillshot"></td>
+    <td rowspan="5"><img class="stillshot" :src="this.path + this.thumbnail"></td>
     <td class="table_movie_title" colspan="2">{{$props.movie.movie_title}}{{$props.movie.movie_age}}
-      <button align=right v-on:click="updateMovie">수정</button><button align=right v-on:click="deleteMovie($props.movie._id)">삭제</button></td>
+      
+      <button v-if="state.login" align=right v-on:click="handleClickButton($props.movie)">수정</button>
+      <button v-if="state.login" align=right v-on:click="deleteMovie($props.movie._id)">삭제</button></td>
+    
   </tr>
   <tr>
     <td class="table_movie_score" colspan="2">{{$props.movie.movie_score}}</td>
@@ -11,8 +14,13 @@
   <tr>
     <td class="table_movie_published" colspan="2">{{$props.movie.movie_published}}</td>
   </tr>
-  <tr>
-    <td class="table_modi" colspan="2"></td>
+  <tr align="left">
+    <td class="table_modi" colspan="2">
+      <span v-for="item in stillShotList" :key="item._id">
+        <img v-on:click="changeThumbNail(item.movie_stillshot)" class="mini-Thumbnail" :src="this.path + item.movie_stillshot">
+      </span>
+    
+    </td>
   </tr>
   <tr>
     <td colspan="2"> </td>
@@ -21,32 +29,51 @@
 </template>
 
 <script>
+import RegisterMovie from './RegisterMovie'
 import axios from 'axios';
 export default {
   name: 'MovieCard',
-  props: ['movie'],
+  props: ['movie','state'],
+  components:{
+    RegisterMovie
+  },
   data(){
     return{
-      updateList : []
+      thumbnail : "",
+      updateList : [],
+      stillShotList : [],
+      path : `/image/`,
+      visible: false,
     }
   },
   mounted() {
-      console.log(this.$props.movie)
+    axios.get('/stillshot/' + this.$props.movie._id).then(res =>{
+      this.stillShotList = res.data;
+      this.thumbnail = this.stillShotList[0].movie_stillshot;
+      this.stillShotList.shift();
+    })
   },
   methods: {
     deleteMovie(id){
       axios.delete('/movies/' + id).then(res =>{
-        console.log("삭제됨");
         this.$emit('updateList', this.updateList);
+        
       })
     },
-    updateMovie(){
-
-      
-      
+    updateMovie(id){
+      console.log(id)
+      this.handleClickButton()
+    },
+    changeThumbNail(src){
+      let temp = this.thumbnail;
+      this.thumbnail = src; 
+    },
+    handleClickButton(e){
+      this.$emit('update', e)
+      $refs.calendar.nextDate()
     }
-    
   },
+  
 }
 </script>
 
@@ -69,4 +96,12 @@ export default {
   .table_movie_score, .table_movie_published, .table_modi{
     width: 450px;
   }
+  .mini-Thumbnail{
+    text-align: left;
+    width: 85px;
+    height: 110px;
+    max-height: 100%;
+    margin-right: 5px;
+  }
+  
 </style>

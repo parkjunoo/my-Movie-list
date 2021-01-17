@@ -3,12 +3,23 @@
     <div class="my-modal__dialog">
       <header class="my-modal__header">
         <span>{{title}}</span>
+        <hr>
       </header>
       <div class="my-modal__body">
-        영화이름<input type="text" placeholder="영화 이름"><br>
-        <input type="text" placeholder="개봉일">
-        <input type="text" placeholder="평점">
-        <textarea COLS=70 ROWS=3 READONLY>TEXTAREA</textarea>
+        -제목 : <input v-model="movie_title" type="text" placeholder="영화 제목" >
+        -평점 : <input v-model="movie_score" type="text" placeholder="영화 평점">
+        <hr>
+        -등급 : 
+        <select v-model="movie_age" name = "" size = "1">
+            <option value=0>전체관람가</option>
+            <option value=12>12세 관람가</option>
+            <option value=15>15세 관람가</option>
+            <option value=18>청소년 관람불가</option>    
+        </select> 
+        -개봉일 : <input v-model="movie_published" type="text" placeholder="개봉일">
+        <hr>
+        -줄거리 : 
+        <textarea v-model="movie_description" COLS=70 ROWS=3>TEXTAREA</textarea>
         <div class="main-container">
           <div class="room-deal-information-container">
             <div class="room-file-upload-wrapper">
@@ -27,7 +38,7 @@
                     <div class="file-preview-container">
                         <div v-for="(file, index) in files" :key="index" class="file-preview-wrapper">
                             <div class="file-close-button" @click="fileDeleteButton" :name="file.number">
-                                x
+                              x
                             </div>
                             <img :src="file.preview" />
                         </div>
@@ -44,20 +55,26 @@
         </div>
         </div>
       </div>
-      <button @click="$emit('update:visible', !visible)">저장</button>
+      <button @click="onSubmit" >저장</button>
       <button @click="$emit('update:visible', !visible)">취소</button>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'my-modal',
   data() {
     return {
       files: [], //업로드용 파일
       filesPreview: [],
-      uploadImageIndex: 0 // 이미지 업로드를 위한 변수
+      uploadImageIndex: 0, // 이미지 업로드를 위한 변수
+      movie_title: "",
+      movie_score: "",
+      movie_description: "",
+      movie_published: "",
+      movie_age: 0
     }
   },
   props: {
@@ -70,6 +87,21 @@ export default {
       type: String,
       require: false,
     },
+    data: []
+  },
+  watch:{
+    data : function () {
+      console.log(this.data)
+      this.movie_title = this.data.movie_title,
+      this.movie_score = this.data.movie_score
+      this.movie_description = this.data.movie_description,
+      this.movie_published = this.data.movie_published,
+      this.movie_age = this.data.movie_age
+      axios.get('/stillshot/' + this.data._id).then(res =>{
+        this.files = res.data;
+        
+      })
+    }
   },
   methods: {
     handleWrapperClick(){
@@ -93,14 +125,10 @@ export default {
         num = i;
       }
       this.uploadImageIndex = num + 1;
-      console.log(this.files);
     },
     imageAddUpload() {
-      console.log(this.$refs.files.files);
-
       let num = -1;
       for (let i = 0; i < this.$refs.files.files.length; i++) {
-        console.log(this.uploadImageIndex);
         this.files = [
           ...this.files,
           //이미지 업로드
@@ -116,15 +144,39 @@ export default {
         num = i;
       }
       this.uploadImageIndex = this.uploadImageIndex + num + 1;
-      console.log(this.files);
-      // console.log(this.filesPreview);
     },
     fileDeleteButton(e) {
       const name = e.target.getAttribute('name');
       this.files = this.files.filter(data => data.number !== Number(name));
       // console.log(this.files);
     },
-  },
+    onSubmit(){
+      axios.post('/movies', {
+          movie_title : this.movie_title,
+          movie_score : this.movie_score,
+          movie_description : this.movie_description,
+          movie_age : this.movie_age,
+          movie_published : this.movie_published,
+      })
+      .then(res =>{
+        let movieID = parseInt(res.data);
+        for (let i = 0; i < this.files.length; i++) {
+          let formData = new FormData();
+          formData.append('image', this.files[i].file);
+          axios.post('/upload', formData).then(res => {
+            console.log("!!!"+ res.data)
+            axios.post('/stillshot',{ 
+                movieNo : movieID,
+                moviePath : res.data
+            }).then(rest =>{
+                console.log("성공적으로 shtillshot이 등록됐었습니다.");
+            })
+          });
+        }
+      });
+      this.$emit('update:visible', !this.visible);
+    },
+  }
 }
 </script>
 
@@ -154,7 +206,7 @@ $module: 'my-modal';
     position: relative;
   }
   &__body {
-    padding: 25px;
+    padding: 10px;
     min-height: 400px;
     max-height: 512px;
     margin-bottom: 10px;
@@ -168,7 +220,7 @@ $module: 'my-modal';
         }
         
         .room-deal-information-container {
-            margin-top: 50px;
+            margin-top: 10px;
             color: #222222;
             border: 1px solid #dddddd;
         }

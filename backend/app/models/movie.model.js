@@ -5,7 +5,6 @@ const Movie = function(movies) {
   this.movie_title = movies.movie_title;
   this.movie_published = movies.movie_published;
   this.movie_score = movies.movie_score;
-  this.movie_stillshot = movies.movie_stillshot;
   this.movie_description = movies.movie_description;
   this.movie_age = movies.movie_age;
 };
@@ -17,7 +16,6 @@ Movie.create = (newMovie, result) => {
       result(err, null);
       return;
     }
-
     console.log("created movie: ", { id: res.insertId, ...newMovie });
     result(null, { id: res.insertId, ...newMovie });
   });
@@ -35,6 +33,7 @@ Movie.findById = (movieName, result) => {
     if (res.length) {
       console.log("found movie: ", res);
       result(null, res);
+      console.log("{}{}", res)
       return;
     }
 
@@ -97,5 +96,4 @@ Movie.remove = (id, result) => {
     result(null, res);
   });
 };
-
 module.exports = Movie;
