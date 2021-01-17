@@ -55,8 +55,9 @@
         </div>
         </div>
       </div>
-      <button @click="onSubmit" >저장</button>
-      <button @click="$emit('update:visible', !visible)">취소</button>
+      <button v-if="title === '영화 추가하기'" @click="onSubmit">저장</button>
+      <button v-else @click="upDateSubmit()">수정</button>
+      <button @click="[$emit('update:visible', !visible), init()]">취소</button>
     </div>
   </div>
 </template>
@@ -91,30 +92,59 @@ export default {
   },
   watch:{
     data : function () {
-      console.log(this.data)
       this.movie_title = this.data.movie_title,
       this.movie_score = this.data.movie_score
       this.movie_description = this.data.movie_description,
       this.movie_published = this.data.movie_published,
       this.movie_age = this.data.movie_age
-      axios.get('/stillshot/' + this.data._id).then(res =>{
-        this.files = res.data;
-        
-      })
-    }
-  },
-  methods: {
-    handleWrapperClick(){
-      this.$emit('update:visible', false)
-    },
-    imageUpload() {
-      let num = -1;
-      for (let i = 0; i < this.$refs.files.files.length; i++) {
+      axios.get('/stillshot/update/' + this.data._id).then(res =>{
+        let num = -1;
+        for(var i = 0; i < res.data.length; i++){
+        console.log(res.data[i]);
         this.files = [
           ...this.files,
           //이미지 업로드
             {
               //실제 파일
+              file: res.data[i],
+              //이미지 프리뷰
+              preview: res.data[i],
+              //삭제및 관리를 위한 number
+              number: i
+            }
+        ];
+        num = i;
+        this.uploadImageIndex = num + 1;
+      }
+      })
+    }
+    
+  },
+  methods: {
+    init(){
+      this.files = [], //업로드용 파일
+      this.filesPreview = [],
+      this.uploadImageIndex = 0, // 이미지 업로드를 위한 변수
+      this.movie_title = "",
+      this.movie_score = "",
+      this.movie_description = "",
+      this.movie_published = "",
+      this.movie_age = 0
+    },
+    handleWrapperClick(){
+      this.$emit('update:visible', false)
+      this.init()
+    },
+    imageUpload() {
+      let num = -1;
+      for (let i = 0; i < this.$refs.files.files.length; i++) {
+        console.log("!!!",this.$refs.files.files[i]);
+        this.files = [
+          ...this.files,
+          //이미지 업로드
+            {
+              //실제 파일
+              
               file: this.$refs.files.files[i],
               //이미지 프리뷰
               preview: URL.createObjectURL(this.$refs.files.files[i]),
@@ -176,6 +206,20 @@ export default {
       });
       this.$emit('update:visible', !this.visible);
     },
+    upDateSubmit(){
+      axios.put('/movies/'+this.data._id, {
+        movie_title : this.movie_title,
+        movie_published : this.movie_published,
+        movie_score : this.movie_score, 
+        movie_description : this.movie_description,
+        movie_age : this.movie_age,
+      }).then(res => {
+          console.log("성공")
+          this.$emit('update:visible', !this.visible);
+          this.$router.go(0);
+      });
+
+    }
   }
 }
 </script>

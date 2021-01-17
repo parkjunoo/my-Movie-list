@@ -57,8 +57,8 @@ Movie.getAll = result => {
 
 Movie.updateById = (id, movie, result) => {
   sql.query(
-    "UPDATE movie SET movie_title = ?, movie_published = ?, movie_score = ?, movie_stillshot = ?, movie_description =? WHERE id = ?",
-    [movie.movie_title, movie.movie_published, movie.movie_score, movie.movie_stillshot, movie.movie_description, movie_age],
+    "UPDATE movie SET movie_title = ?, movie_published = ?, movie_score = ?, movie_description = ?, movie_age = ? WHERE _id = ?",
+    [movie.movie_title, movie.movie_published, movie.movie_score, movie.movie_description, movie.movie_age, id],
     (err, res) => {
       if (err) {
         console.log("error: ", err);

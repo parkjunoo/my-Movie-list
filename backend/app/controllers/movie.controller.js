@@ -149,6 +149,29 @@ exports.findIdStillshot = (req, res) => {
   });
 };
 
+exports.findIdStillshotUpdate = (req, res) => {
+  StillShot.findByIdUpdate(req.params.movieId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `controller: findOne: id없음 ${req.params.movieId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "controller: findOne: server " + req.params.movieId
+        });
+      }
+    } else{
+      let files = [];
+      const imgUrl = "http://localhost:3000/image/"
+      for(let i = 0; i < data.length; i++){
+         result = imgUrl+data[i].movie_stillshot;
+         files.push(result)
+      }
+      res.send(files);
+    }
+  });
+};
 
 exports.authorize = (req, res) => {
   Admin.findById(req.params.password, (err, data) => {

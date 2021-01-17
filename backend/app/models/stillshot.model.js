@@ -34,6 +34,23 @@ StillShot.findById = (movieId, result) => {
     });
   };
 
+  StillShot.findByIdUpdate = (movieId, result) => {
+    sql.query(`SELECT movie_stillshot FROM stillshot WHERE movie_no = ${movieId}`, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+      if (res.length) {
+        console.log("found movie: ", res);
+        result(null, res);
+        console.log("DASDA", res.movie_stillshot)
+        return;
+      }
+      
+      result({ kind: "not_found" }, null);
+    });
+  };
 
 // StillShot.updateById = (id, movie, result) => {
 //     sql.query(

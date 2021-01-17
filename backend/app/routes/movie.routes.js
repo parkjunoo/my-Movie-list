@@ -17,4 +17,6 @@ module.exports = app => {
   app.post("/stillshot",movie.createStillShot);
   //stillshot 영화 아이디로 찾기
   app.get("/stillshot/:movieId", movie.findIdStillshot);
+
+  app.get("/stillshot/update/:movieId", movie.findIdStillshotUpdate);
 };

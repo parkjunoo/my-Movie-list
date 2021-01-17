@@ -73,8 +73,14 @@ export default {
       })
     },
     handleClickButton(s){
-      this.action = s == 0 ? "영화 추가하기" : "영화 수정하기";
-      this.updateData = s;
+     
+      if(s == 0){
+        this.action = "영화 추가하기";
+      }else{
+        this.action = "영화 수정하기";
+        this.updateData = s;
+      }
+      
       this.visible = !this.visible
     },
     login(){
