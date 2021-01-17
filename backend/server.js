@@ -1,6 +1,5 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const path = __dirname + '/app/views/';
 const multer = require("multer");
 const upload = multer({dest: './upload'});
 const sql = require("./app/models/db.js");
@@ -14,7 +13,8 @@ app.use(session({
   store: new FileStore()
 }));
 
-app.use(express.static(path));
+app.use(express.static('public'));
+app.use(express.static('app/views/img'));
 // parse requests of content-type: application/json
 app.use(bodyParser.json());
 
@@ -30,6 +30,7 @@ app.listen(3000, () => {
   console.log("Server is running on port 3000.");
 });
 app.use('/image',express.static('./upload'));
+app.use('/static',express.static('./app/views/img'))
 
 app.post('/upload', (req, res, next) => {
   upload.single('image')(req, res, function (err) {

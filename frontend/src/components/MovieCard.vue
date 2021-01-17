@@ -1,12 +1,12 @@
 <template>
-  <table border="1">
+  <div >
+  <div align="center" v-if="this.description" @click="this.summary" class="story_Box"></div>
+  <table v-else @click="this.summary" >  
   <tr>
-    <td rowspan="5"><img class="stillshot" :src="this.path + this.thumbnail"></td>
-    <td class="table_movie_title" colspan="2">{{$props.movie.movie_title}}{{$props.movie.movie_age}}
-      
-      <button v-if="state.login" align=right v-on:click="handleClickButton($props.movie)">수정</button>
-      <button v-if="state.login" align=right v-on:click="deleteMovie($props.movie._id)">삭제</button></td>
-    
+    <td rowspan="5"><img class="stillshot" :src="`/image/${this.thumbnail}`"></td>
+    <td class="table_movie_title" colspan="2">{{$props.movie.movie_title}}<img class="age_img" :src="`/static/${$props.movie.movie_age}.png`"></td>
+    <td rowspan="5" align=right valign=top ><button class="tools_table" v-if="state.login" t v-on:click="handleClickButton($props.movie)">수정</button>
+      <button class="tools_table" v-if="state.login" v-on:click="deleteMovie($props.movie._id)">삭제</button></td>
   </tr>
   <tr>
     <td class="table_movie_score" colspan="2">{{$props.movie.movie_score}}</td>
@@ -25,7 +25,9 @@
   <tr>
     <td colspan="2"> </td>
   </tr>
+
 </table>
+</div>
 </template>
 
 <script>
@@ -42,8 +44,9 @@ export default {
       thumbnail : "",
       updateList : [],
       stillShotList : [],
-      path : `/image/`,
+      path : "/image/",
       visible: false,
+      description: false
     }
   },
   mounted() {
@@ -54,6 +57,9 @@ export default {
     })
   },
   methods: {
+    summary(){
+      this.description = !this.description;
+    },
     deleteMovie(id){
       axios.delete('/movies/' + id).then(res =>{
         this.$emit('updateList', this.updateList);
@@ -61,7 +67,6 @@ export default {
       })
     },
     updateMovie(id){
-      console.log(id)
       this.handleClickButton()
     },
     changeThumbNail(src){
@@ -69,8 +74,7 @@ export default {
       this.thumbnail = src; 
     },
     handleClickButton(e){
-      this.$emit('update', e)
-      $refs.calendar.nextDate()
+      this.$emit('update', e);
     }
   },
   
@@ -78,6 +82,9 @@ export default {
 </script>
 
 <style>
+  .body{
+    background-color: #898b91 ;
+  }
   .stillshot{
     width: 150px;
     height: 195px;
@@ -89,6 +96,10 @@ export default {
     width: 600px;
     height: 200px;
     display: inline-block;
+    border: 1px solid #444444;
+    margin: 0px;
+    padding: 0px;
+
   }
   tr{
     object-fit: cover;
@@ -103,5 +114,21 @@ export default {
     max-height: 100%;
     margin-right: 5px;
   }
+  .story_Box{
+    margin-top: 2px;
+    margin: 0 auto;
+    text-align: center;
+    width: 600px;
+    height: 205px;
+    background-color: white;
+  }
+  .tools_table{
+    
+    float: left;
   
+  }
+  .age_img{
+    width: 20px;
+    height: 20px;
+  }
 </style>

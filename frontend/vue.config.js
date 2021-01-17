@@ -1,6 +1,8 @@
+
 module.exports = { 
   lintOnSave: false,
-  outputDir: '../backend/app/views', 
+  outputDir: '../backend/public', 
+  
   devServer: { 
     proxy: { 
       '/api': { 
@@ -13,3 +15,4 @@ module.exports = {
     } 
   },
 }
+
