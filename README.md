@@ -1,6 +1,7 @@
 # 영화 목록 페이지
 http://3.34.137.230:3000/
 
+password: 1234
 ## 개발 환경 :
 - DataBase : MySQL
 - BackEnd : node.js
