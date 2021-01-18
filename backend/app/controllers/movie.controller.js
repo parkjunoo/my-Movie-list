@@ -19,6 +19,7 @@ exports.create = (req, res) => {
     movie_age: req.body.movie_age
   });
 
+  //새로운 무비 등록
   Movie.create(movie, (err, data) => {
     if (err)
       res.status(500).send({
@@ -63,7 +64,7 @@ exports.findKeywordAll = (req, res) => {
   
 };
 
-// Update a Customer identified by the customerId in the request
+//영화 업데이트
 exports.update = (req, res) => {
   // Validate Request
   if (!req.body) {
@@ -91,6 +92,7 @@ exports.update = (req, res) => {
   );
 };
 
+//영화 삭제
 exports.delete = (req, res) => {
   Movie.remove(req.params.movieId, (err, data) => {
     if (err) {
@@ -107,6 +109,7 @@ exports.delete = (req, res) => {
   });
 };
 
+//스틸샷 생성
 exports.createStillShot = (req, res) =>{
   if (!req.body) {
     res.status(400).send({
@@ -131,6 +134,7 @@ exports.createStillShot = (req, res) =>{
   });
 }
 
+//movie 아이디로 스틸샷 찾기
 exports.findIdStillshot = (req, res) => {
   StillShot.findById(req.params.movieId, (err, data) => {
     if (err) {
@@ -148,6 +152,7 @@ exports.findIdStillshot = (req, res) => {
     }
   });
 };
+
 
 exports.findIdStillshotUpdate = (req, res) => {
   StillShot.findByIdUpdate(req.params.movieId, (err, data) => {
@@ -173,6 +178,7 @@ exports.findIdStillshotUpdate = (req, res) => {
   });
 };
 
+// 관리자 정보 찾기
 exports.authorize = (req, res) => {
   Admin.findById(req.params.password, (err, data) => {
     if (err) {

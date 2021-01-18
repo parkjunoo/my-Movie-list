@@ -1,6 +1,6 @@
 const sql = require("./db.js");
 
-// constructor
+//영화 model
 const Movie = function(movies) {
   this.movie_title = movies.movie_title;
   this.movie_published = movies.movie_published;
@@ -29,15 +29,12 @@ Movie.findById = (movieName, result) => {
       result(err, null);
       return;
     }
-
     if (res.length) {
       console.log("found movie: ", res);
       result(null, res);
       console.log("{}{}", res)
       return;
     }
-
-    // not found Customer with the id
     result({ kind: "not_found" }, null);
   });
 };
@@ -49,7 +46,6 @@ Movie.getAll = result => {
       result(null, err);
       return;
     }
-
     console.log("movies: ", res);
     result(null, res);
   });
@@ -65,13 +61,10 @@ Movie.updateById = (id, movie, result) => {
         result(null, err);
         return;
       }
-
       if (res.affectedRows == 0) {
-        // not found Customer with the id
         result({ kind: "not_found" }, null);
         return;
       }
-
       console.log("updated movier: ", { id: id, ...movie });
       result(null, { id: id, ...movie });
     }
@@ -85,9 +78,7 @@ Movie.remove = (id, result) => {
       result(null, err);
       return;
     }
-
     if (res.affectedRows == 0) {
-      // not found Customer with the id
       result({ kind: "not_found" }, null);
       return;
     }

@@ -2,20 +2,20 @@
 module.exports = app => {
   const movie = require("../controllers/movie.controller.js");
   
+  // Movie Create
   app.post("/movies", movie.create);
-
+  // Movie findAll
   app.get("/movies/", movie.findAll);
-
+  // Movie findAllByName
   app.get("/movies/:movieKeyword", movie.findKeywordAll);
-
+  // Movie Update
   app.put("/movies/:movieId", movie.update);
-
+  // Movie Delete
   app.delete("/movies/:movieId", movie.delete);
 
-  //StillShot
-  //stillshot 등록
+  // StillShot Create
   app.post("/stillshot",movie.createStillShot);
-  //stillshot 영화 아이디로 찾기
+  // StillShot FindByMoiveId
   app.get("/stillshot/:movieId", movie.findIdStillshot);
 
   app.get("/stillshot/update/:movieId", movie.findIdStillshotUpdate);

@@ -56,14 +56,11 @@ export default {
         if(this.keyword == ""){
           this.movieList = [];
         }
-        console.log(this.keyword);
     },
     event(){
-      console.log("입력 : " + this.keyword);
       axios.get('/movies/' + this.keyword, {
         }).then(res =>{
           this.movieList = res.data;
-          console.log(res.data);
       })
     },
     listUpdate(){
@@ -72,14 +69,12 @@ export default {
       })
     },
     handleClickButton(s){
-     
       if(s == 0){
         this.action = "add";
       }else{
         this.action = "modify";
         this.updateData = s;
       }
-      
       this.visible = !this.visible
     },
     login(){
@@ -92,7 +87,6 @@ export default {
 
       let password = prompt("비밀번호를 입력해주세요.");
       axios.post('/admin/'+password).then(res =>{
-        console.log(res)
         if(res.data === "success"){
           localStorage.setItem("access_token", res)
           this.$router.go(0);

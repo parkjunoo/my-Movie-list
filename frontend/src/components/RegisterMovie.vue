@@ -65,9 +65,9 @@
         </div>
         </div>
       </div>
-      <button v-if="title === 'add'" @click="onSubmit">저장</button>
-      <button v-else @click="upDateSubmit()">수정</button>
-      <button @click="[$emit('update:visible', !visible), init()]">취소</button>
+      <button class="comfirm-button" @click="[$emit('update:visible', !visible), init()]">❌</button>
+      <button class="comfirm-button" v-if="title === 'add'" @click="onSubmit">✔</button>
+      <button class="comfirm-button" v-else @click="upDateSubmit()">✔</button>
     </div>
   </div>
 </template>
@@ -78,9 +78,9 @@ export default {
   name: 'my-modal',
   data() {
     return {
-      files: [], //업로드용 파일
+      files: [],
       filesPreview: [],
-      uploadImageIndex: 0, // 이미지 업로드를 위한 변수
+      uploadImageIndex: 0,
       movie_title: "",
       movie_score: "",
       movie_description: "",
@@ -110,31 +110,25 @@ export default {
       axios.get('/stillshot/update/' + this.data._id).then(res =>{
         let num = -1;
         for(var i = 0; i < res.data.length; i++){
-        console.log(res.data[i]);
         this.files = [
           ...this.files,
-          //이미지 업로드
             {
-              //실제 파일
               file: res.data[i],
-              //이미지 프리뷰
               preview: res.data[i],
-              //삭제및 관리를 위한 number
               number: i
             }
         ];
         num = i;
         this.uploadImageIndex = num + 1;
-      }
+        }
       })
     }
-    
   },
   methods: {
     init(){
-      this.files = [], //업로드용 파일
+      this.files = [], 
       this.filesPreview = [],
-      this.uploadImageIndex = 0, // 이미지 업로드를 위한 변수
+      this.uploadImageIndex = 0,
       this.movie_title = "",
       this.movie_score = "",
       this.movie_description = "",
@@ -148,17 +142,11 @@ export default {
     imageUpload() {
       let num = -1;
       for (let i = 0; i < this.$refs.files.files.length; i++) {
-        console.log("!!!",this.$refs.files.files[i]);
         this.files = [
           ...this.files,
-          //이미지 업로드
             {
-              //실제 파일
-              
               file: this.$refs.files.files[i],
-              //이미지 프리뷰
               preview: URL.createObjectURL(this.$refs.files.files[i]),
-              //삭제및 관리를 위한 number
               number: i
             }
         ];
@@ -171,13 +159,9 @@ export default {
       for (let i = 0; i < this.$refs.files.files.length; i++) {
         this.files = [
           ...this.files,
-          //이미지 업로드
           {
-            //실제 파일
             file: this.$refs.files.files[i],
-            //이미지 프리뷰
             preview: URL.createObjectURL(this.$refs.files.files[i]),
-            //삭제및 관리를 위한 number
             number: i + this.uploadImageIndex
           }
         ];
@@ -188,7 +172,6 @@ export default {
     fileDeleteButton(e) {
       const name = e.target.getAttribute('name');
       this.files = this.files.filter(data => data.number !== Number(name));
-      // console.log(this.files);
     },
     onSubmit(){
       axios.post('/movies', {
@@ -204,12 +187,10 @@ export default {
           let formData = new FormData();
           formData.append('image', this.files[i].file);
           axios.post('/upload', formData).then(res => {
-            console.log("!!!"+ res.data)
             axios.post('/stillshot',{ 
                 movieNo : movieID,
                 moviePath : res.data
             }).then(rest =>{
-                console.log("성공적으로 shtillshot이 등록됐었습니다.");
                 this.$router.go(0);
             })
           });
@@ -218,7 +199,6 @@ export default {
       this.$emit('update:visible', !this.visible);
     },
     upDateSubmit(){
-      console.log()
       axios.put('/movies/'+this.data._id, {
         movie_title : this.data.movie_title,
         movie_published : this.data.movie_published,
@@ -226,7 +206,6 @@ export default {
         movie_description : this.data.movie_description,
         movie_age : this.data.movie_age,
       }).then(res => {
-          console.log("성공")
           this.$emit('update:visible', !this.visible);
           this.$router.go(0);
       });
@@ -238,13 +217,11 @@ export default {
 <style lang="scss">
 $module: 'my-modal';
 .#{$module} {
-  // This is modal bg
   background-color: rgba(0,0,0,.7);
   top: 0; right: 0; bottom: 0; left: 0;
   position: fixed;
   overflow: auto;
   margin: 0;
-  //This is modal layer
   &__dialog{
     left: 30%;
     top: 85px;
@@ -565,4 +542,10 @@ $module: 'my-modal';
         .room-write-button:hover {
             opacity: 0.8;
         }
+      .comfirm-button{
+        width: 70px;
+        color: #fff;
+        background-color: #94b4f0;
+        margin: 5px;
+      }
 </style>
