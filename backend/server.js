@@ -59,6 +59,3 @@ app.post('/admin/:password', (req, res, next) =>{
     }
   });
 });
-
-
-

@@ -1,11 +1,12 @@
 <template>
-  <div class="movieList">
+  <div class="movieList" >
     <div class="searchbar" @keyup="event">
       <input v-on:input="typing" v-bind:value="keyword" placeholder="제목을 입력하세요" autofocus/>
     </div>
-    <p></p>
-    <div class="login"><button v-if="this.state.login" @click="handleClickButton(0)">추가</button>
-    <button class="admin" @click="login" >{{this.state.name}}</button></div>
+    <p></p><h5 style="opacity:0.3">카드를 클릭하면 줄거리가 나옵니다!</h5>
+    <button class="admin" @click="login" >{{this.state.name}}</button><br>
+    <button class="add-button" v-if="this.state.login" @click="handleClickButton(0)">+ Movie</button>
+    
     <p></p>
     <li v-for = "item in movieList" v-bind:key = "item._id">
       <MovieCard :state.sync="state" :movie="item" @updateList="listUpdate" @update="handleClickButton"></MovieCard>
@@ -33,7 +34,6 @@ export default {
       visible: false,
       action : "",
       updateData: [],
-
       state: {
         login : false,
         name : ""
@@ -69,15 +69,14 @@ export default {
     listUpdate(){
       axios.get('/movies').then(res =>{
         this.movieList = res.data; 
-        console.log(this.movieList)
       })
     },
     handleClickButton(s){
      
       if(s == 0){
-        this.action = "영화 추가하기";
+        this.action = "add";
       }else{
-        this.action = "영화 수정하기";
+        this.action = "modify";
         this.updateData = s;
       }
       
@@ -107,6 +106,14 @@ export default {
 </script>
 
 <style>
+.wrap{
+  width : 100px;
+}
+.add-button, .admin{
+  
+  color: #fff;
+  background-color: #1564f9;
+}
   li{
    list-style:none;
   }
@@ -118,6 +125,6 @@ export default {
     display: inline;
   }
   .admin{
-    margin-left: 220px;
+    margin-left: 520px;
   }
 </style>

@@ -52,27 +52,4 @@ StillShot.findById = (movieId, result) => {
     });
   };
 
-// StillShot.updateById = (id, movie, result) => {
-//     sql.query(
-//       "UPDATE movie SET movie_title = ?, movie_published = ?, movie_score = ?, movie_stillshot = ?, movie_description =? WHERE id = ?",
-//       [movie.movie_title, movie.movie_published, movie.movie_score, movie.movie_stillshot, movie.movie_description, movie_age],
-//       (err, res) => {
-//         if (err) {
-//           console.log("error: ", err);
-//           result(null, err);
-//           return;
-//         }
-  
-//         if (res.affectedRows == 0) {
-//           // not found Customer with the id
-//           result({ kind: "not_found" }, null);
-//           return;
-//         }
-  
-//         console.log("updated movier: ", { id: id, ...movie });
-//         result(null, { id: id, ...movie });
-//       }
-//     );
-// };
-
 module.exports = StillShot;

@@ -96,4 +96,5 @@ Movie.remove = (id, result) => {
     result(null, res);
   });
 };
+
 module.exports = Movie;

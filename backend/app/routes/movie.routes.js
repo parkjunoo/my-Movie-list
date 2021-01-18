@@ -19,4 +19,5 @@ module.exports = app => {
   app.get("/stillshot/:movieId", movie.findIdStillshot);
 
   app.get("/stillshot/update/:movieId", movie.findIdStillshotUpdate);
+
 };

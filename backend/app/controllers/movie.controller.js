@@ -1,6 +1,6 @@
+  
 const Movie = require("../models/movie.model.js");
 const StillShot = require("../models/stillshot.model.js");
-
 
 // movie 객체 생성
 exports.create = (req, res) => {

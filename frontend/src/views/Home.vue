@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>Movie List</h1>
+    <h1> 🎞Movie List🎞</h1>
     <MovieMain></MovieMain>
   </div>
 </template>
@@ -16,3 +16,9 @@ export default {
   }
 }
 </script>
+
+<style>
+  h1{
+    color: #1564f9;
+  }
+</style>
