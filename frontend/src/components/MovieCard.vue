@@ -1,17 +1,22 @@
 <template>
   <div >
-  <div align="center" v-if="this.description" @click="this.summary" class="story_Box"></div>
-  <table v-else @click="this.summary" >  
+  <div  align="center" v-if="this.description" @click="this.summary" class="story_Box">
+    <h5>줄거리</h5>
+    <hr>
+    {{$props.movie.movie_description}}
+    <hr>
+  </div>
+  <table v-else >  
   <tr>
     <td rowspan="5"><img class="stillshot" :src="`/image/${this.thumbnail}`"></td>
-    <td class="table_movie_title" colspan="2">{{$props.movie.movie_title}}<img class="age_img" :src="`/static/${$props.movie.movie_age}.png`"></td>
+    <td @click="this.summary" class="table_movie_title" colspan="2">{{$props.movie.movie_title}}<img class="age_img" :src="`/static/${$props.movie.movie_age}.png`"></td>
     <td rowspan="5" align=right valign=top ><button class="tools_table" v-if="state.login" t v-on:click="handleClickButton($props.movie)">수정</button>
       <button class="tools_table" v-if="state.login" v-on:click="deleteMovie($props.movie._id)">삭제</button></td>
   </tr>
-  <tr>
-    <td class="table_movie_score" colspan="2">{{$props.movie.movie_score}}</td>
+  <tr @click="this.summary">
+    <td  class="table_movie_score" colspan="2">{{$props.movie.movie_score}}</td>
   </tr>
-  <tr>
+  <tr @click="this.summary">
     <td class="table_movie_published" colspan="2">{{$props.movie.movie_published}}</td>
   </tr>
   <tr align="left">
@@ -53,7 +58,6 @@ export default {
     axios.get('/stillshot/' + this.$props.movie._id).then(res =>{
       this.stillShotList = res.data;
       this.thumbnail = this.stillShotList[0].movie_stillshot;
-      this.stillShotList.shift();
     })
   },
   methods: {
@@ -121,6 +125,8 @@ export default {
     width: 600px;
     height: 205px;
     background-color: white;
+    overflow-y: scroll;
+    
   }
   .tools_table{
     
