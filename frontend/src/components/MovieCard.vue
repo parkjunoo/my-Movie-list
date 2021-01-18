@@ -9,22 +9,32 @@
   <table v-else >  
   <tr>
     <td rowspan="5"><img class="stillshot" :src="`/image/${this.thumbnail}`"></td>
-    <td @click="this.summary" class="table_movie_title" colspan="2">{{$props.movie.movie_title}}<img class="age_img" :src="`/static/${$props.movie.movie_age}.png`"></td>
-    <td rowspan="5" align=right valign=top ><button class="tools_table" v-if="state.login" t v-on:click="handleClickButton($props.movie)">수정</button>
-      <button class="tools_table" v-if="state.login" v-on:click="deleteMovie($props.movie._id)">삭제</button></td>
+    <td @click="this.summary" class="table_movie_title" colspan="2">{{$props.movie.movie_title}}
+      <img class="age_img" :src="`/static/${$props.movie.movie_age}.png`"></td>
+    <td rowspan="5" align=right style = "white-space : nowrap" valign=top>
+      <div class="tools"><div class="tools_edit" v-if="state.login" t v-on:click="handleClickButton($props.movie)">✏️</div>
+      <div class="tools_delete" v-if="state.login" v-on:click="deleteMovie($props.movie._id)">🗑</div></div></td>
   </tr>
   <tr @click="this.summary">
-    <td  class="table_movie_score" colspan="2">{{$props.movie.movie_score}}</td>
+    <td  class="table_movie_score" colspan="2">
+      <div class ="star-box">
+        <div class="wrap-star">
+          <div class='star-rating'>
+            <span :style ="`width:${$props.movie.movie_score/10*100}%`"></span>
+          </div>
+        </div>
+      </div>
+      {{$props.movie.movie_score}}
+    </td>
   </tr>
   <tr @click="this.summary">
     <td class="table_movie_published" colspan="2">{{$props.movie.movie_published}}</td>
   </tr>
   <tr align="left">
-    <td class="table_modi" colspan="2">
+    <td valign=bottom border="0" class="table_modi" colspan="2">
       <span v-for="item in stillShotList" :key="item._id">
         <img v-on:click="changeThumbNail(item.movie_stillshot)" class="mini-Thumbnail" :src="this.path + item.movie_stillshot">
       </span>
-    
     </td>
   </tr>
   <tr>
@@ -71,7 +81,7 @@ export default {
       })
     },
     updateMovie(id){
-      this.handleClickButton()
+      this.handleClickButton(id)
     },
     changeThumbNail(src){
       let temp = this.thumbnail;
@@ -86,9 +96,6 @@ export default {
 </script>
 
 <style>
-  .body{
-    background-color: #898b91 ;
-  }
   .stillshot{
     width: 150px;
     height: 195px;
@@ -103,20 +110,22 @@ export default {
     border: 1px solid #444444;
     margin: 0px;
     padding: 0px;
+    background-color: #f0f0f0;
 
   }
   tr{
     object-fit: cover;
   }
   .table_movie_score, .table_movie_published, .table_modi{
+    font-weight: 700;
     width: 450px;
   }
   .mini-Thumbnail{
     text-align: left;
     width: 85px;
-    height: 110px;
+    height: 112px;
     max-height: 100%;
-    margin-right: 5px;
+    margin-right: 2px;
   }
   .story_Box{
     margin-top: 2px;
@@ -128,13 +137,30 @@ export default {
     overflow-y: scroll;
     
   }
-  .tools_table{
-    
-    float: left;
-  
+  .tools_edit, .tools_delete{
+    height: 22px;
+    width: 22px;
+    margin: 2px;
+    display: inline-block;
+    cursor: pointer;
   }
   .age_img{
     width: 20px;
     height: 20px;
   }
+  .tools {
+    display: inline-block;
+  }
+  .table_movie_title{
+    font-weight: 1000;
+  }
+  .star-box{
+    margin-left: 130px;
+    align-items: center;
+    width: 100px;
+  }
+  .star-rating {width:122px; float: left; }
+  .star-rating,.star-rating span {display:inline-block; height:22px; overflow:hidden; background:url(/static/star.png)no-repeat; float: left;  }
+  .star-rating span{background-position:left bottom; line-height:0; vertical-align:top; float: left;  }
+  
 </style>

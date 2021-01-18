@@ -2,24 +2,35 @@
   <div class="my-modal" v-if="visible" @click.self="handleWrapperClick">
     <div class="my-modal__dialog">
       <header class="my-modal__header">
-        <span>{{title}}</span>
+        <span v-if="title === 'add'">영화 추가하기</span>
+        <span v-else>영화 수정하기</span>
         <hr>
       </header>
       <div class="my-modal__body">
-        -제목 : <input v-model="movie_title" type="text" placeholder="영화 제목" >
-        -평점 : <input v-model="movie_score" type="text" placeholder="영화 평점">
+        -제목 : <input v-if="title === 'add'" v-model="movie_title" type="text" placeholder="영화 제목" >
+                <input v-else v-model="$props.data.movie_title" type="text" placeholder="영화 제목" >
+        -평점 : <input v-if="title === 'add'" v-model="movie_score" type="text" placeholder="ex) 8.5 (10점 만점)">
+                <input v-else v-model="$props.data.movie_score" type="text" placeholder="ex) 8.5 (10점 만점)" >
         <hr>
         -등급 : 
-        <select v-model="movie_age" name = "" size = "1">
+        <select v-if="title === 'add'" v-model="movie_age" name = "" size = "1">
+            <option value=0>전체관람가</option>
+            <option value=12>12세 관람가</option>
+            <option value=15>15세 관람가</option>
+            <option value=18>청소년 관람불가</option>    
+        </select>
+        <select v-else v-model="$props.data.movie_age" name = "" size = "1">
             <option value=0>전체관람가</option>
             <option value=12>12세 관람가</option>
             <option value=15>15세 관람가</option>
             <option value=18>청소년 관람불가</option>    
         </select> 
-        -개봉일 : <input v-model="movie_published" type="text" placeholder="개봉일">
+        -개봉일 : <input v-if="title === 'add'" v-model="movie_published" type="text" placeholder="ex) 2021.01.18">
+                  <input v-else v-model="$props.data.movie_published" type="text" placeholder="ex) 2021.01.18">
         <hr>
         -줄거리 : 
-        <textarea v-model="movie_description" COLS=70 ROWS=3>TEXTAREA</textarea>
+        <textarea v-if="title === 'add'" v-model="movie_description" COLS=70 ROWS=3></textarea>
+        <textarea v-else v-model="$props.data.movie_description" COLS=70 ROWS=3></textarea>
         <div class="main-container">
           <div class="room-deal-information-container">
             <div class="room-file-upload-wrapper">
@@ -47,7 +58,6 @@
                                 <label for="file">추가 사진 등록</label>
                                 <input type="file" id="file" ref="files" @change="imageAddUpload" multiple />
                             </div>
-                            <!-- <div class="file-close-button" @click="fileDeleteButton" :name="file.number">x</div> -->
                         </div>
                     </div>
                 </div>
@@ -55,7 +65,7 @@
         </div>
         </div>
       </div>
-      <button v-if="title === '영화 추가하기'" @click="onSubmit">저장</button>
+      <button v-if="title === 'add'" @click="onSubmit">저장</button>
       <button v-else @click="upDateSubmit()">수정</button>
       <button @click="[$emit('update:visible', !visible), init()]">취소</button>
     </div>
@@ -200,6 +210,7 @@ export default {
                 moviePath : res.data
             }).then(rest =>{
                 console.log("성공적으로 shtillshot이 등록됐었습니다.");
+                this.$router.go(0);
             })
           });
         }
@@ -207,18 +218,18 @@ export default {
       this.$emit('update:visible', !this.visible);
     },
     upDateSubmit(){
+      console.log()
       axios.put('/movies/'+this.data._id, {
-        movie_title : this.movie_title,
-        movie_published : this.movie_published,
-        movie_score : this.movie_score, 
-        movie_description : this.movie_description,
-        movie_age : this.movie_age,
+        movie_title : this.data.movie_title,
+        movie_published : this.data.movie_published,
+        movie_score : this.data.movie_score, 
+        movie_description : this.data.movie_description,
+        movie_age : this.data.movie_age,
       }).then(res => {
           console.log("성공")
           this.$emit('update:visible', !this.visible);
           this.$router.go(0);
       });
-
     }
   }
 }
@@ -461,7 +472,6 @@ $module: 'my-modal';
         }
         
         .image-box {
-            padding-bottom: 20px;
             text-align: center;
         }
         

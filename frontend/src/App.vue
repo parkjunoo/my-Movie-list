@@ -1,4 +1,5 @@
 <template>
+  
   <div align=center id="nav">
     <router-view :key="$route.fullPath"></router-view>
   </div>
