@@ -114,7 +114,7 @@ export default {
           ...this.files,
             {
               file: res.data[i],
-              preview: res.data[i],
+              preview: '/image/'+res.data[i],
               number: i
             }
         ];

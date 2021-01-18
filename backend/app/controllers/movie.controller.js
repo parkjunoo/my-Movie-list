@@ -168,11 +168,11 @@ exports.findIdStillshotUpdate = (req, res) => {
       }
     } else{
       let files = [];
-      const imgUrl = "http://localhost:3000/image/"
       for(let i = 0; i < data.length; i++){
-         result = imgUrl+data[i].movie_stillshot;
+         result = data[i].movie_stillshot;
+         
          files.push(result)
-      }
+      }console.log(files)
       res.send(files);
     }
   });
